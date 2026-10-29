@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جلاس هوم | Glass Home</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#eab308',
+                            500: '#d97706',
+                            600: '#b45309',
+                            gradient: 'linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%)'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at center, #1a1e29 0%, #0a0c10 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.15);
+        }
+
+        .gold-text-gradient {
+            background: linear-gradient(135deg, #fceabb 0%, #f8b500 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-btn {
+            background: linear-gradient(135deg, #d4af37 0%, #8a7322 100%);
+            transition: all 0.3s ease;
+        }
+
+        .gold-btn:hover {
+            background: linear-gradient(135deg, #f8b500 0%, #d4af37 100%);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Logo Animation Overlay */
+        #splashOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #0a0c10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-out, visibility 1s ease-out;
+        }
+
+        .logo-intro {
+            width: 280px;
+            height: auto;
+            animation: logoZoom 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.4));
+        }
+
+        @keyframes logoZoom {
+            0% {
+                transform: scale(0.3) rotate(-5deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1) rotate(0deg);
+                opacity: 1;
+            }
+            75% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(0.7) translateY(-30px);
+                opacity: 0.9;
+            }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(10, 12, 16, 0.8);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.4);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-slate-100 custom-scrollbar">
+
+    <!-- Splash Screen Logo Intro Animation -->
+    <div id="splashOverlay">
+        <div class="text-center">
+            <svg class="logo-intro mx-auto" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- SVG Emblem Logo representation -->
+                <circle cx="250" cy="250" r="210" stroke="url(#goldGrad)" stroke-width="8" fill="none" opacity="0.3"/>
+                <path d="M150,250 C150,150 220,130 300,130 C380,130 380,220 300,220 C220,220 200,280 200,340 C200,400 280,410 350,370" stroke="url(#goldGrad)" stroke-width="26" stroke-linecap="round" fill="none"/>
+                <rect x="260" y="160" width="100" height="180" rx="8" stroke="url(#goldGrad)" stroke-width="12" fill="none"/>
+                <line x1="310" y1="160" x2="310" y2="340" stroke="url(#goldGrad)" stroke-width="6"/>
+                <line x1="260" y1="250" x2="360" y2="250" stroke="url(#goldGrad)" stroke-width="6"/>
+                <path d="M220,220 L300,160 L380,220" stroke="url(#goldGrad)" stroke-width="10" stroke-linecap="round" fill="none"/>
+                <defs>
+                    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#fceabb" />
+                        <stop offset="50%" stop-color="#f8b500" />
+                        <stop offset="100%" stop-color="#d4af37" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            <h1 class="text-2xl font-black tracking-widest gold-text-gradient mt-4">GLASS HOME</h1>
+            <p class="text-xs text-amber-200/60 mt-1">عالم الألومنيوم والزجاج الفاخر</p>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-amber-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Official Site Logo -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('homeSection')">
+                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center p-1.5 shadow-lg shadow-amber-500/10">
+                    <svg viewBox="0 0 500 500" fill="none" class="w-full h-full">
+                        <circle cx="250" cy="250" r="210" stroke="url(#hdrGrad)" stroke-width="12" fill="none"/>
+                        <path d="M150,250 C150,150 220,130 300,130 C380,130 380,220 300,220" stroke="url(#hdrGrad)" stroke-width="30" stroke-linecap="round" fill="none"/>
+                        <rect x="260" y="160" width="100" height="180" rx="8" stroke="url(#hdrGrad)" stroke-width="16" fill="none"/>
+                        <line x1="310" y1="160" x2="310" y2="340" stroke="url(#hdrGrad)" stroke-width="8"/>
+                        <line x1="260" y1="250" x2="360" y2="250" stroke="url(#hdrGrad)" stroke-width="8"/>
+                        <defs>
+                            <linearGradient id="hdrGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#fceabb" />
+                                <stop offset="100%" stop-color="#d4af37" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-black tracking-wider gold-text-gradient">GLASS HOME</h2>
+                    <p class="text-[10px] text-amber-400/80 font-bold uppercase tracking-widest">Aluminium & Glass</p>
+                </div>
+            </div>
+
+            <!-- Login / Admin Dashboard Header Button -->
+            <div class="flex items-center gap-3">
+                <button id="adminNavBtn" onclick="openLoginModal()" class="gold-btn px-5 py-2.5 rounded-xl text-slate-950 font-extrabold text-xs flex items-center gap-2 shadow-lg">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span id="navBtnText">تسجيل الدخول</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+        <!-- HOME SECTION -->
+        <section id="homeSection" class="space-y-12">
+            <!-- Hero Banner -->
+            <div class="text-center space-y-4 max-w-3xl mx-auto">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold">
+                    <i class="fa-solid fa-crown text-amber-400"></i> جودة وفخامة لا تضاهى
+                </div>
+                <h1 class="text-3xl md:text-5xl font-black text-white leading-tight">
+                    مؤسسة <span class="gold-text-gradient">جلاس هوم</span> للألومنيوم والزجاج
+                </h1>
+                <p class="text-slate-400 text-sm md:text-base">
+                    نقدم أحدث التصاميم العصرية للأبواب، النوافذ، الدرج، والمطابخ بأعلى معايير الدقة والإتقان.
+                </p>
+            </div>
+
+            <!-- 4 Transparent Glass Category Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+                
+                <!-- 1. Doors Section -->
+                <div class="glass-card p-8 rounded-3xl text-center space-y-4 cursor-pointer group" onclick="openCategoryInfo('الأبواب', 'تصاميم أبواب ألومنيوم وزجاج فاخرة مقاومة للعوامل الجوية بأشكال معمارية راقية.')">
+                    <div class="w-20 h-20 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-4xl group-hover:scale-110 transition duration-300">
+                        <i class="fa-solid fa-door-open"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white group-hover:text-amber-400 transition">١. الأبواب</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        أبواب ألومنيوم وزجاج سحابة ومفصلية ذات عزل صوتي وحراري ممتاز.
+                    </p>
+                    <span class="inline-block text-xs font-bold text-amber-400/80 group-hover:text-amber-300">استعراض التفاصيل ←</span>
+                </div>
+
+                <!-- 2. Windows Section -->
+                <div class="glass-card p-8 rounded-3xl text-center space-y-4 cursor-pointer group" onclick="openCategoryInfo('النوافذ', 'نوافذ دبل جلاس سحاب ومفصلي بعزل تام للغبار والضوضاء.')">
+                    <div class="w-20 h-20 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-4xl group-hover:scale-110 transition duration-300">
+                        <i class="fa-solid fa-border-all"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white group-hover:text-amber-400 transition">٢. النوافذ</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        نوافذ زجاجية مزدوجة مع قطاعات ألومنيوم متينة ومقاومة للتآكل.
+                    </p>
+                    <span class="inline-block text-xs font-bold text-amber-400/80 group-hover:text-amber-300">استعراض التفاصيل ←</span>
+                </div>
+
+                <!-- 3. Stairs Section -->
+                <div class="glass-card p-8 rounded-3xl text-center space-y-4 cursor-pointer group" onclick="openCategoryInfo('الدرج', 'درابزين زجاجي مصفح ستانلس ستيل وألومنيوم عصري للدرج والفلل.')">
+                    <div class="w-20 h-20 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-4xl group-hover:scale-110 transition duration-300">
+                        <i class="fa-solid fa-stairs"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white group-hover:text-amber-400 transition">٣. الدرج</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        درابزين زجاجي سيكوريت مصفح بتصاميم سينمائية ساحرة للمنازل والفلل.
+                    </p>
+                    <span class="inline-block text-xs font-bold text-amber-400/80 group-hover:text-amber-300">استعراض التفاصيل ←</span>
+                </div>
+
+                <!-- 4. Kitchens Section -->
+                <div class="glass-card p-8 rounded-3xl text-center space-y-4 cursor-pointer group" onclick="openCategoryInfo('المطابخ', 'مطابخ ألومنيوم وفورميكا مودرن بتشطيبات زجاجية راقية.')">
+                    <div class="w-20 h-20 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-4xl group-hover:scale-110 transition duration-300">
+                        <i class="fa-solid fa-kitchen-set"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white group-hover:text-amber-400 transition">٤. المطابخ</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        مطابخ ألومنيوم عصرية بأسطح زجاجية مقاومة للرطوبة والحرارة العالية.
+                    </p>
+                    <span class="inline-block text-xs font-bold text-amber-400/80 group-hover:text-amber-300">استعراض التفاصيل ←</span>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ADMIN DASHBOARD SECTION -->
+        <section id="adminDashboardSection" class="hidden space-y-8">
+            
+            <!-- Dashboard Title Header -->
+            <div class="glass-panel p-6 rounded-3xl border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-400 text-2xl flex items-center justify-center border border-amber-500/30">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">لوحة تحكم إدارة جلاس هوم</h2>
+                        <p class="text-xs text-slate-400">إدارة الطلبات، الحسابات المادية، والآلة الحاسبة</p>
+                    </div>
+                </div>
+
+                <button onclick="logoutAdmin()" class="px-4 py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-power-off"></i>
+                    <span>تسجيل الخروج</span>
+                </button>
+            </div>
+
+            <!-- Admin Section Tabs -->
+            <div class="flex flex-wrap gap-3 border-b border-slate-700/60 pb-3">
+                <button onclick="switchAdminTab('ordersTab')" id="tabBtn_ordersTab" class="px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                    <i class="fa-solid fa-box-archive"></i>
+                    <span>القسم ١: إدارة الطلبات</span>
+                </button>
+                <button onclick="switchAdminTab('calcTab')" id="tabBtn_calcTab" class="px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-slate-800 text-slate-400 hover:bg-slate-700">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>القسم ٢: الحاسبة والحسابات المادية</span>
+                </button>
+                <button onclick="switchAdminTab('statusTab')" id="tabBtn_statusTab" class="px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-slate-800 text-slate-400 hover:bg-slate-700">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>القسم ٣: متابعة حالات الطلب والدفع</span>
+                </button>
+            </div>
+
+
+            <!-- TAB 1: ORDERS MANAGEMENT -->
+            <div id="ordersTab" class="space-y-6">
+                
+                <!-- Add New Order Form Card -->
+                <div class="glass-panel p-6 rounded-3xl border border-slate-700/60 space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-cart-plus text-amber-400"></i>
+                        <span>إضافة طلب جديد</span>
+                    </h3>
+
+                    <form onsubmit="handleCreateOrder(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">اسم العميل</label>
+                            <input type="text" id="orderCustomerName" required placeholder="أدخل اسم العميل..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">رقم العميل</label>
+                            <input type="tel" id="orderCustomerPhone" required placeholder="969 xxxxxxxx" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">نوع الطلب</label>
+                            <select id="orderType" required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+                                <option value="أبواب">أبواب</option>
+                                <option value="نوافذ">نوافذ</option>
+                                <option value="درج">درج</option>
+                                <option value="مطابخ">مطابخ</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">إجمالي السعر الأصلي ($/ر.س)</label>
+                            <input type="number" id="orderTotalPrice" oninput="calculateNewOrderRemaining()" required min="0" placeholder="0.00" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">نسبة التخفيض (%)</label>
+                            <input type="number" id="orderDiscount" oninput="calculateNewOrderRemaining()" min="0" max="100" value="0" placeholder="0%" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">السعر المدفوع</label>
+                            <input type="number" id="orderPaidPrice" oninput="calculateNewOrderRemaining()" min="0" value="0" placeholder="0.00" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">السعر المتبقي (محسوب)</label>
+                            <input type="number" id="orderRemainingPrice" readonly value="0" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-amber-400 font-bold focus:outline-none">
+                        </div>
+
+                        <div class="flex items-end">
+                            <button type="submit" class="w-full gold-btn py-2.5 rounded-xl font-bold text-slate-950 text-xs flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>حفظ وإضافة الطلب</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Orders List Table -->
+                <div class="glass-panel p-6 rounded-3xl border border-slate-700/60 space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-list text-amber-400"></i>
+                        <span>قائمة الطلبات المسجلة</span>
+                    </h3>
+
+                    <div class="overflow-x-auto rounded-2xl border border-slate-700/50">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900/80 text-xs text-amber-400 font-bold border-b border-slate-700">
+                                    <th class="p-3.5">العميل</th>
+                                    <th class="p-3.5">الهاتف</th>
+                                    <th class="p-3.5">النوع</th>
+                                    <th class="p-3.5">الإجمالي</th>
+                                    <th class="p-3.5">الخصم</th>
+                                    <th class="p-3.5">المدفوع (تعديل)</th>
+                                    <th class="p-3.5">المتبقي (تعديل)</th>
+                                    <th class="p-3.5 text-center">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody" class="divide-y divide-slate-800 text-xs text-slate-200">
+                                <!-- Dynamic Orders Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- TAB 2: CALCULATOR & FINANCIAL SUMMARIES -->
+            <div id="calcTab" class="hidden space-y-6">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Financial Overview Cards (Left/Top 7 Cols) -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="glass-panel p-6 rounded-3xl border border-slate-700/60 space-y-6">
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-chart-pie text-amber-400"></i>
+                                <span>إحصائيات المبالغ المدفوعة والمتبقية</span>
+                            </h3>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div class="glass-card p-5 rounded-2xl border-r-4 border-r-blue-500">
+                                    <div class="text-xs text-slate-400">إجمالي قيمة الطلبات</div>
+                                    <div id="summaryTotalAmount" class="text-2xl font-black text-white mt-1">0.00</div>
+                                </div>
+
+                                <div class="glass-card p-5 rounded-2xl border-r-4 border-r-emerald-500">
+                                    <div class="text-xs text-slate-400">إجمالي المبالغ المدفوعة</div>
+                                    <div id="summaryPaidAmount" class="text-2xl font-black text-emerald-400 mt-1">0.00</div>
+                                </div>
+
+                                <div class="glass-card p-5 rounded-2xl border-r-4 border-r-amber-500">
+                                    <div class="text-xs text-slate-400">إجمالي المبالغ المتبقية</div>
+                                    <div id="summaryRemainingAmount" class="text-2xl font-black text-amber-400 mt-1">0.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Quick Calculator (Right/Bottom 5 Cols) -->
+                    <div class="lg:col-span-5">
+                        <div class="glass-panel p-6 rounded-3xl border border-amber-500/30 space-y-4">
+                            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-calculator text-amber-400"></i>
+                                <span>آلة حاسبة سريعة للأسعار والخصومات</span>
+                            </h3>
+
+                            <div class="bg-slate-950/90 rounded-2xl p-4 border border-slate-800 space-y-2">
+                                <input type="text" id="calcDisplay" readonly value="0" class="w-full bg-transparent text-left text-2xl font-mono text-amber-400 font-bold focus:outline-none">
+                            </div>
+
+                            <div class="grid grid-cols-4 gap-2 text-sm font-bold">
+                                <button onclick="calcPress('C')" class="p-3 rounded-xl bg-rose-500/20 text-rose-300 hover:bg-rose-500/30">C</button>
+                                <button onclick="calcPress('(')" class="p-3 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700">(</button>
+                                <button onclick="calcPress(')')" class="p-3 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700">)</button>
+                                <button onclick="calcPress('/')" class="p-3 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30">÷</button>
+
+                                <button onclick="calcPress('7')" class="p-3 rounded-xl bg-slate-800 text-white hover:bg-slate-700">7</button>
+                                <button onclick="calcPress('8')" class="p-3 rounded-xl bg-slate-800 text-white hover:bg-slate-700">8</button>
+                                <button onclick="calcPress('9')" class="p-3 rounded-xl bg-slate-800 text-white hover:bg-slate-700">9</button>
+                                <button onclick="calcPress('*')" class="p-3 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30">×</button>
+
+                                <button onclick="calcPress('4')" class="p-3 rounded-xl bg-slate-800 text-white hover:bg-slate-700">4</button>
+                                <button onclick="calcPress('5')" class="p-3 rounded-xl bg-slate-800 text-white hover:bg-slate-700">5</button>
+                                <button onclick="calcPress('6')" class="p-3 rounded-xl bg-slate-800 text-white hover:bg-slate-700">6</button>
+                                <button onclick="calcPress('-')" class="p-3 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30">-</button>
+
+                                <button onclick="calcPress('1')" class="p-3 rounded-xl bg-slate-800 text-white hover:bg-slate-700">1</button>
+                                <button onclick="calcPress('2')" class="p-3 rounded-xl bg-slate-800 text-white hover:bg-slate-700">2</button>
+                                <button onclick="calcPress('3')" class="p-3 rounded-xl bg-slate-800 text-white hover:bg-slate-700">3</button>
+                                <button onclick="calcPress('+')" class="p-3 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30">+</button>
+
+                                <button onclick="calcPress('0')" class="col-span-2 p-3 rounded-xl bg-slate-800 text-white hover:bg-slate-700">0</button>
+                                <button onclick="calcPress('.')" class="p-3 rounded-xl bg-slate-800 text-white hover:bg-slate-700">.</button>
+                                <button onclick="calcPress('=')" class="p-3 rounded-xl gold-btn text-slate-950 font-black">=</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TAB 3: ORDER STATUS & PAYMENT STATUS -->
+            <div id="statusTab" class="hidden space-y-6">
+                <div class="glass-panel p-6 rounded-3xl border border-slate-700/60 space-y-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-bars-staggered text-amber-400"></i>
+                        <span>متابعة حالة الطلبات (جاهز، جاري العمل، تم التسليم) وحالة الدفع</span>
+                    </h3>
+
+                    <div class="overflow-x-auto rounded-2xl border border-slate-700/50">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900/80 text-xs text-amber-400 font-bold border-b border-slate-700">
+                                    <th class="p-3.5">العميل</th>
+                                    <th class="p-3.5">نوع الطلب</th>
+                                    <th class="p-3.5">المبلغ النهائي</th>
+                                    <th class="p-3.5">حالة الطلب</th>
+                                    <th class="p-3.5">حالة الدفع</th>
+                                </tr>
+                            </thead>
+                            <tbody id="statusTableBody" class="divide-y divide-slate-800 text-xs text-slate-200">
+                                <!-- Dynamic Status Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- LOGIN MODAL -->
+    <div id="loginModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-md p-8 rounded-3xl border border-amber-500/30 shadow-2xl space-y-6 relative">
+            <button onclick="closeLoginModal()" class="absolute top-5 left-5 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-400 text-2xl flex items-center justify-center mx-auto border border-amber-500/30">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">تسجيل دخول الإدارة</h3>
+                <p class="text-xs text-slate-400">أدخل اسم المستخدم وكلمة السر المعتمدة</p>
+            </div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">اسم المستخدم</label>
+                    <input type="text" id="loginUsername" required placeholder="glasss_home1" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">كلمة السر</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••••••" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+                </div>
+
+                <div id="loginError" class="hidden text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-xl p-3 text-center"></div>
+
+                <button type="submit" class="w-full gold-btn py-3 rounded-xl font-bold text-slate-950 text-xs flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>دخول لوحة التحكم</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CATEGORY DETAILS MODAL -->
+    <div id="categoryModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-lg p-8 rounded-3xl border border-amber-500/30 shadow-2xl space-y-6 relative text-center">
+            <button onclick="closeCategoryModal()" class="absolute top-5 left-5 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-400 text-3xl flex items-center justify-center mx-auto border border-amber-500/30">
+                <i class="fa-solid fa-gem"></i>
+            </div>
+
+            <h3 id="catModalTitle" class="text-2xl font-bold gold-text-gradient">اسم القسم</h3>
+            <p id="catModalDesc" class="text-sm text-slate-300 leading-relaxed">تفاصيل القسم...</p>
+
+            <button onclick="closeCategoryModal()" class="gold-btn px-6 py-2.5 rounded-xl font-bold text-slate-950 text-xs">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-800 glass-panel py-6 text-center text-xs text-slate-400">
+        جميع الحقوق محفوظة © 2026 — <strong class="gold-text-gradient">جلاس هوم GLASS HOME</strong>
+    </footer>
+
+    <script>
+        /* ----------------------------------------------------
+           1. Application State & Credentials
+        ---------------------------------------------------- */
+        const ADMIN_AUTH = {
+            username: "glasss_home1",
+            password: "glasss_1@qw34.9-1"
+        };
+
+        let state = {
+            isAdminLoggedIn: false,
+            orders: []
+        };
+
+        // Initial Seed Mock Orders
+        const initialOrders = [
+            {
+                id: 'ord_1',
+                customerName: 'عبدالله السالم',
+                customerPhone: '0501234567',
+                type: 'أبواب',
+                totalPrice: 5000,
+                discount: 10,
+                paidPrice: 2500,
+                remainingPrice: 2000,
+                orderStatus: 'جاري العمل',
+                paymentStatus: 'جاري الدفع'
+            },
+            {
+                id: 'ord_2',
+                customerName: 'م. فهد العامري',
+                customerPhone: '0559876543',
+                type: 'مطابخ',
+                totalPrice: 12000,
+                discount: 5,
+                paidPrice: 11400,
+                remainingPrice: 0,
+                orderStatus: 'جاهز',
+                paymentStatus: 'تم الدفع'
+            }
+        ];
+
+        /* ----------------------------------------------------
+           2. Initialization & Splash Screen
+        ---------------------------------------------------- */
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load saved orders from localStorage
+            const saved = localStorage.getItem('glasshome_orders');
+            if (saved) {
+                state.orders = JSON.parse(saved);
+            } else {
+                state.orders = initialOrders;
+                saveOrders();
+            }
+
+            // Hide Splash Overlay after 2.5s
+            setTimeout(() => {
+                const overlay = document.getElementById('splashOverlay');
+                overlay.style.opacity = '0';
+                overlay.style.visibility = 'hidden';
+            }, 2300);
+        });
+
+        function saveOrders() {
+            localStorage.setItem('glasshome_orders', JSON.stringify(state.orders));
+            renderOrdersTables();
+        }
+
+        /* ----------------------------------------------------
+           3. Section Navigation Logic
+        ---------------------------------------------------- */
+        function showSection(secId) {
+            if (secId === 'adminDashboardSection' && !state.isAdminLoggedIn) {
+                openLoginModal();
+                return;
+            }
+
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('adminDashboardSection').classList.add('hidden');
+
+            document.getElementById(secId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* ----------------------------------------------------
+           4. Admin Authentication
+        ---------------------------------------------------- */
+        function openLoginModal() {
+            if (state.isAdminLoggedIn) {
+                showSection('adminDashboardSection');
+            } else {
+                document.getElementById('loginModal').classList.remove('hidden');
+            }
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('loginUsername').value.trim();
+            const p = document.getElementById('loginPassword').value.trim();
+            const err = document.getElementById('loginError');
+
+            if (u === ADMIN_AUTH.username && p === ADMIN_AUTH.password) {
+                err.classList.add('hidden');
+                state.isAdminLoggedIn = true;
+                closeLoginModal();
+
+                document.getElementById('navBtnText').innerText = "لوحة التحكم";
+                showSection('adminDashboardSection');
+                renderOrdersTables();
+            } else {
+                err.classList.remove('hidden');
+                err.innerText = "اسم المستخدم أو كلمة السر غير صحيحة!";
+            }
+        }
+
+        function logoutAdmin() {
+            state.isAdminLoggedIn = false;
+            document.getElementById('navBtnText').innerText = "تسجيل الدخول";
+            showSection('homeSection');
+        }
+
+        /* ----------------------------------------------------
+           5. Admin Tabs Switching
+        ---------------------------------------------------- */
+        function switchAdminTab(tabId) {
+            ['ordersTab', 'calcTab', 'statusTab'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+                const btn = document.getElementById(`tabBtn_${id}`);
+                btn.className = "px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-slate-800 text-slate-400 hover:bg-slate-700";
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tabBtn_${tabId}`);
+            activeBtn.className = "px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-amber-500/20 text-amber-300 border border-amber-500/40";
+        }
+
+        /* ----------------------------------------------------
+           6. Orders Management (Tab 1)
+        ---------------------------------------------------- */
+        function calculateNewOrderRemaining() {
+            const total = Number(document.getElementById('orderTotalPrice').value) || 0;
+            const discountPercent = Number(document.getElementById('orderDiscount').value) || 0;
+            const paid = Number(document.getElementById('orderPaidPrice').value) || 0;
+
+            const finalPrice = total - (total * (discountPercent / 100));
+            const remaining = Math.max(0, finalPrice - paid);
+
+            document.getElementById('orderRemainingPrice').value = remaining.toFixed(2);
+        }
+
+        function handleCreateOrder(e) {
+            e.preventDefault();
+            const name = document.getElementById('orderCustomerName').value.trim();
+            const phone = document.getElementById('orderCustomerPhone').value.trim();
+            const type = document.getElementById('orderType').value;
+            const totalPrice = Number(document.getElementById('orderTotalPrice').value) || 0;
+            const discount = Number(document.getElementById('orderDiscount').value) || 0;
+            const paidPrice = Number(document.getElementById('orderPaidPrice').value) || 0;
+
+            const finalPrice = totalPrice - (totalPrice * (discount / 100));
+            const remainingPrice = Math.max(0, finalPrice - paidPrice);
+
+            const newOrd = {
+                id: 'ord_' + Date.now(),
+                customerName: name,
+                customerPhone: phone,
+                type: type,
+                totalPrice: totalPrice,
+                discount: discount,
+                paidPrice: paidPrice,
+                remainingPrice: remainingPrice,
+                orderStatus: 'جاري العمل',
+                paymentStatus: remainingPrice === 0 ? 'تم الدفع' : 'جاري الدفع'
+            };
+
+            state.orders.unshift(newOrd);
+            saveOrders();
+
+            // Reset form
+            document.getElementById('orderCustomerName').value = '';
+            document.getElementById('orderCustomerPhone').value = '';
+            document.getElementById('orderTotalPrice').value = '';
+            document.getElementById('orderDiscount').value = '0';
+            document.getElementById('orderPaidPrice').value = '0';
+            document.getElementById('orderRemainingPrice').value = '0';
+        }
+
+        function updateOrderPaid(ordId, newPaid) {
+            const ord = state.orders.find(o => o.id === ordId);
+            if (!ord) return;
+
+            ord.paidPrice = Number(newPaid) || 0;
+            const finalPrice = ord.totalPrice - (ord.totalPrice * (ord.discount / 100));
+            ord.remainingPrice = Math.max(0, finalPrice - ord.paidPrice);
+
+            if (ord.remainingPrice === 0) {
+                ord.paymentStatus = 'تم الدفع';
+            } else {
+                ord.paymentStatus = 'جاري الدفع';
+            }
+
+            saveOrders();
+        }
+
+        function updateOrderRemaining(ordId, newRemaining) {
+            const ord = state.orders.find(o => o.id === ordId);
+            if (!ord) return;
+
+            ord.remainingPrice = Number(newRemaining) || 0;
+            saveOrders();
+        }
+
+        function deleteOrder(ordId) {
+            if (confirm('هل أنت تأكد من حذف هذا الطلب؟')) {
+                state.orders = state.orders.filter(o => o.id !== ordId);
+                saveOrders();
+            }
+        }
+
+        function updateOrderStatus(ordId, newStatus) {
+            const ord = state.orders.find(o => o.id === ordId);
+            if (ord) {
+                ord.orderStatus = newStatus;
+                saveOrders();
+            }
+        }
+
+        function updateOrderPaymentStatus(ordId, newStatus) {
+            const ord = state.orders.find(o => o.id === ordId);
+            if (ord) {
+                ord.paymentStatus = newStatus;
+                saveOrders();
+            }
+        }
+
+        /* ----------------------------------------------------
+           7. Render Tables & Summaries
+        ---------------------------------------------------- */
+        function renderOrdersTables() {
+            // Render Tab 1 Table
+            const tbody1 = document.getElementById('ordersTableBody');
+            if (tbody1) {
+                tbody1.innerHTML = state.orders.map(o => `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3.5 font-bold text-white">${escapeHtml(o.customerName)}</td>
+                        <td class="p-3.5 text-slate-300 font-mono">${escapeHtml(o.customerPhone)}</td>
+                        <td class="p-3.5"><span class="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/20 font-semibold">${o.type}</span></td>
+                        <td class="p-3.5 text-slate-200 font-bold">${o.totalPrice.toFixed(2)}</td>
+                        <td class="p-3.5 text-slate-400">${o.discount}%</td>
+                        <td class="p-3.5">
+                            <input type="number" value="${o.paidPrice}" onchange="updateOrderPaid('${o.id}', this.value)" class="w-24 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-emerald-400 font-bold focus:outline-none focus:border-amber-400">
+                        </td>
+                        <td class="p-3.5">
+                            <input type="number" value="${o.remainingPrice}" onchange="updateOrderRemaining('${o.id}', this.value)" class="w-24 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-amber-400 font-bold focus:outline-none focus:border-amber-400">
+                        </td>
+                        <td class="p-3.5 text-center">
+                            <button onclick="deleteOrder('${o.id}')" class="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition" title="حذف الطلب">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Render Tab 3 Table
+            const tbody3 = document.getElementById('statusTableBody');
+            if (tbody3) {
+                tbody3.innerHTML = state.orders.map(o => {
+                    const finalP = o.totalPrice - (o.totalPrice * (o.discount / 100));
+                    return `
+                        <tr class="hover:bg-slate-800/40 transition">
+                            <td class="p-3.5 font-bold text-white">${escapeHtml(o.customerName)}</td>
+                            <td class="p-3.5 text-slate-300">${o.type}</td>
+                            <td class="p-3.5 font-bold text-amber-300">${finalP.toFixed(2)}</td>
+                            <td class="p-3.5">
+                                <select onchange="updateOrderStatus('${o.id}', this.value)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+                                    <option value="جاري العمل" ${o.orderStatus === 'جاري العمل' ? 'selected' : ''}>جاري العمل</option>
+                                    <option value="جاهز" ${o.orderStatus === 'جاهز' ? 'selected' : ''}>جاهز</option>
+                                    <option value="تم التسليم" ${o.orderStatus === 'تم التسليم' ? 'selected' : ''}>تم التسليم</option>
+                                </select>
+                            </td>
+                            <td class="p-3.5">
+                                <select onchange="updateOrderPaymentStatus('${o.id}', this.value)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-amber-400">
+                                    <option value="جاري الدفع" ${o.paymentStatus === 'جاري الدفع' ? 'selected' : ''}>جاري الدفع</option>
+                                    <option value="تم الدفع" ${o.paymentStatus === 'تم الدفع' ? 'selected' : ''}>تم الدفع</option>
+                                </select>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            // Calculate Summaries for Tab 2
+            let tot = 0, paid = 0, rem = 0;
+            state.orders.forEach(o => {
+                const finalP = o.totalPrice - (o.totalPrice * (o.discount / 100));
+                tot += finalP;
+                paid += o.paidPrice;
+                rem += o.remainingPrice;
+            });
+
+            document.getElementById('summaryTotalAmount').innerText = tot.toFixed(2);
+            document.getElementById('summaryPaidAmount').innerText = paid.toFixed(2);
+            document.getElementById('summaryRemainingAmount').innerText = rem.toFixed(2);
+        }
+
+        /* ----------------------------------------------------
+           8. Interactive Calculator Logic
+        ---------------------------------------------------- */
+        let calcVal = '0';
+
+        function calcPress(val) {
+            const display = document.getElementById('calcDisplay');
+            if (val === 'C') {
+                calcVal = '0';
+            } else if (val === '=') {
+                try {
+                    calcVal = eval(calcVal).toString();
+                } catch {
+                    calcVal = 'خطأ';
+                }
+            } else {
+                if (calcVal === '0' || calcVal === 'خطأ') {
+                    calcVal = val;
+                } else {
+                    calcVal += val;
+                }
+            }
+            display.value = calcVal;
+        }
+
+        /* ----------------------------------------------------
+           9. Category Info Modal
+        ---------------------------------------------------- */
+        function openCategoryInfo(title, desc) {
+            document.getElementById('catModalTitle').innerText = title;
+            document.getElementById('catModalDesc').innerText = desc;
+            document.getElementById('categoryModal').classList.remove('hidden');
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('categoryModal').classList.add('hidden');
+        }
+
+        function escapeHtml(str) {
+            return str ? str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])) : '';
+        }
+    </script>
+</body>
+</html>
+`تكوين في خدمتكم 
